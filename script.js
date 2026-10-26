@@ -1,4 +1,3 @@
-
 const questions = [
     {
         question: "What is the output of console.log(typeof null)?",
@@ -106,6 +105,7 @@ const questions = [
         answer: 1
     }
 ];
+
 const startScreen = document.getElementById("startScreen");
 const quizScreen = document.getElementById("quizScreen");
 const resultScreen = document.getElementById("resultScreen");
@@ -133,10 +133,13 @@ let score = 0;
 let selected = false;
 let userAnswers = [];
 let currentQuestions = [];
+
 if (localStorage.getItem("quizTheme") === "dark") {
     document.body.classList.add("dark");
 }
+
 updateThemeButton();
+
 themeBtn.addEventListener("click", () => {
     document.body.classList.toggle("dark");
 
@@ -147,12 +150,15 @@ themeBtn.addEventListener("click", () => {
     localStorage.setItem("quizTheme", theme);
     updateThemeButton();
 });
+
 function updateThemeButton() {
     const isDark = document.body.classList.contains("dark");
+
     themeBtn.textContent = isDark
         ? "☀️ Light Mode"
         : "🌙 Dark Mode";
 }
+
 function showBestScore() {
     const best = localStorage.getItem("quizBestScore");
 
@@ -161,45 +167,38 @@ function showBestScore() {
         : `Best score: ${best}/10`;
 }
 
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+
+    return array;
+}
+
 function startQuiz() {
     currentIndex = 0;
     score = 0;
     selected = false;
     userAnswers = [];
 
-    // Shuffle the questions
-    const shuffledQuestions = [...questions];
+    currentQuestions = shuffleArray([...questions])
+        .slice(0, 10)
+        .map(question => {
+            const shuffledOptions = shuffleArray(
+                question.options.map((option, index) => ({
+                    text: option,
+                    isCorrect: index === question.answer
+                }))
+            );
 
-    for (let i = shuffledQuestions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-
-        [shuffledQuestions[i], shuffledQuestions[j]] =
-            [shuffledQuestions[j], shuffledQuestions[i]];
-    }
-
-    // Select 10 random questions
-    currentQuestions = shuffledQuestions.slice(0, 10);
-
-    // Shuffle the options for every selected question
-    currentQuestions = currentQuestions.map(question => {
-        const shuffledOptions = question.options.map((option, index) => ({
-            text: option,
-            isCorrect: index === question.answer
-        }));
-
-        for (let i = shuffledOptions.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-
-            [shuffledOptions[i], shuffledOptions[j]] =
-                [shuffledOptions[j], shuffledOptions[i]];
-        }
-
-        return {
-            ...question,
-            options: shuffledOptions.map(option => option.text),
-            answer: shuffledOptions.findIndex(option => option.isCorrect)
-        };
-    });
+            return {
+                ...question,
+                options: shuffledOptions.map(option => option.text),
+                answer: shuffledOptions.findIndex(option => option.isCorrect)
+            };
+        });
 
     startScreen.classList.add("hidden");
     resultScreen.classList.add("hidden");
@@ -207,6 +206,7 @@ function startQuiz() {
 
     showQuestion();
 }
+
 function showQuestion() {
     selected = false;
 
@@ -249,7 +249,7 @@ function checkAnswer(selectedIndex) {
 
     selected = true;
 
-    const currentQuestion = questions[currentIndex];
+    const currentQuestion = currentQuestions[currentIndex];
     const buttons = optionsContainer.querySelectorAll(".option-btn");
     const isCorrect = selectedIndex === currentQuestion.answer;
 
@@ -262,6 +262,7 @@ function checkAnswer(selectedIndex) {
     } else {
         feedback.textContent =
             `Incorrect. Correct answer: ${currentQuestion.options[currentQuestion.answer]}`;
+
         feedback.style.color = "var(--wrong)";
     }
 
@@ -278,6 +279,7 @@ function checkAnswer(selectedIndex) {
     scoreText.textContent = `Score: ${score}`;
     nextBtn.disabled = false;
 }
+
 function nextQuestion() {
     if (!selected) return;
 
@@ -288,28 +290,30 @@ function nextQuestion() {
         showResults();
     }
 }
+
 function showResults() {
     quizScreen.classList.add("hidden");
     resultScreen.classList.remove("hidden");
 
-    const percentage = Math.round((score / questions.length) * 100);
+    const percentage = Math.round(
+        (score / currentQuestions.length) * 100
+    );
 
     resultTitle.textContent = score >= 7
         ? "Great job!"
         : "Keep practising!";
 
     resultScore.textContent =
-        `You scored ${score}/${questions.length} (${percentage}%).`;
+        `You scored ${score}/${currentQuestions.length} (${percentage}%).`;
 
     resultMessage.textContent = score >= 7
         ? "Excellent work. Keep learning and improving!"
         : "Review your answers and try the quiz again.";
 
-    const previousBest = Number(
-        localStorage.getItem("quizBestScore") || 0
-    );
+    const storedBest = localStorage.getItem("quizBestScore");
+    const previousBest = storedBest === null ? 0 : Number(storedBest);
 
-    if (score > previousBest || localStorage.getItem("quizBestScore") === null) {
+    if (storedBest === null || score > previousBest) {
         localStorage.setItem("quizBestScore", score);
     }
 
@@ -317,7 +321,7 @@ function showResults() {
 
     reviewContainer.innerHTML = "";
 
-    questions.forEach((question, index) => {
+    currentQuestions.forEach((question, index) => {
         const item = document.createElement("div");
         item.className = "review-item";
 
@@ -330,11 +334,13 @@ function showResults() {
         yourAnswer.textContent =
             `Your answer: ${question.options[answerIndex]}`;
 
-        yourAnswer.style.color = answerIndex === question.answer
-            ? "var(--correct)"
-            : "var(--wrong)";
+        yourAnswer.style.color =
+            answerIndex === question.answer
+                ? "var(--correct)"
+                : "var(--wrong)";
 
         const correctAnswer = document.createElement("p");
+
         correctAnswer.textContent =
             `Correct answer: ${question.options[question.answer]}`;
 
