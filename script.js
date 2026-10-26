@@ -133,14 +133,10 @@ let score = 0;
 let selected = false;
 let userAnswers = [];
 let currentQuestions = [];
-// Restore the saved theme
 if (localStorage.getItem("quizTheme") === "dark") {
     document.body.classList.add("dark");
 }
-
 updateThemeButton();
-
-// Switch between light and dark mode
 themeBtn.addEventListener("click", () => {
     document.body.classList.toggle("dark");
 
@@ -151,16 +147,12 @@ themeBtn.addEventListener("click", () => {
     localStorage.setItem("quizTheme", theme);
     updateThemeButton();
 });
-
 function updateThemeButton() {
     const isDark = document.body.classList.contains("dark");
-
     themeBtn.textContent = isDark
         ? "☀️ Light Mode"
         : "🌙 Dark Mode";
 }
-
-// Display the saved best score
 function showBestScore() {
     const best = localStorage.getItem("quizBestScore");
 
@@ -175,7 +167,7 @@ function startQuiz() {
     selected = false;
     userAnswers = [];
 
-    // Shuffle all questions randomly
+    // Shuffle the questions
     const shuffledQuestions = [...questions];
 
     for (let i = shuffledQuestions.length - 1; i > 0; i--) {
@@ -185,8 +177,29 @@ function startQuiz() {
             [shuffledQuestions[j], shuffledQuestions[i]];
     }
 
-    // Select 10 random questions for this attempt
+    // Select 10 random questions
     currentQuestions = shuffledQuestions.slice(0, 10);
+
+    // Shuffle the options for every selected question
+    currentQuestions = currentQuestions.map(question => {
+        const shuffledOptions = question.options.map((option, index) => ({
+            text: option,
+            isCorrect: index === question.answer
+        }));
+
+        for (let i = shuffledOptions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+
+            [shuffledOptions[i], shuffledOptions[j]] =
+                [shuffledOptions[j], shuffledOptions[i]];
+        }
+
+        return {
+            ...question,
+            options: shuffledOptions.map(option => option.text),
+            answer: shuffledOptions.findIndex(option => option.isCorrect)
+        };
+    });
 
     startScreen.classList.add("hidden");
     resultScreen.classList.add("hidden");
@@ -194,11 +207,10 @@ function startQuiz() {
 
     showQuestion();
 }
-
 function showQuestion() {
     selected = false;
 
-  const currentQuestion = currentQuestions[currentIndex];
+  const curentQuestion = currentQuestions[currentIndex];
 
     questionNumber.textContent =
         `Question ${currentIndex + 1} of ${questions.length}`;
