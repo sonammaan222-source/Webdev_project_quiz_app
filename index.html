@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster | JavaScript Quiz</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header class="navbar">
+        <h2>QuizMaster</h2>
+        <button id="themeBtn" class="theme-btn">☀️ Light Mode</button>
+    </header>
+    <main class="container">
+        <section id="startScreen" class="card">
+            <p class="tag">TEST YOUR KNOWLEDGE</p>
+            <h1>Ready to challenge yourself?</h1>
+            <p>Answer 10 multiple-choice questions and discover your score.</p>
+            <p id="bestScore">Best score: Not attempted yet</p>
+            <button id="startBtn" class="primary-btn">Start Quiz →</button>
+        </section>
+        <section id="quizScreen" class="card hidden">
+            <div class="quiz-top">
+                <span id="questionNumber">Question 1 of 10</span>
+                <span id="scoreText">Score: 0</span>
+            </div>
+            <div class="progress-track">
+                <div id="progressBar"></div>
+            </div>
+
+            <h2 id="questionText"></h2>
+            <div id="optionsContainer"></div>
+            <p id="feedback" aria-live="polite"></p>
+
+            <button id="nextBtn" class="primary-btn" disabled>
+                Next Question →
+            </button>
+        </section>
+
+        <section id="resultScreen" class="card hidden">
+            <p class="tag">QUIZ COMPLETED</p>
+            <h1 id="resultTitle">Your Result</h1>
+            <p id="resultScore"></p>
+            <p id="resultMessage"></p>
+
+            <h2>Answer Review</h2>
+            <div id="reviewContainer"></div>
+
+            <button id="restartBtn" class="primary-btn">
+                Try Again ↻
+            </button>
+        </section>
+    </main>
+
+    <footer>
+        <p>Built with HTML, CSS & JavaScript</p>
+    </footer>
+</body>
+</html>

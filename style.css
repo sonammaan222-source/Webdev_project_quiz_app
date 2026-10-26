@@ -1,0 +1,223 @@
+
+:root {
+    --bg: #f3f5fb;
+    --card: #ffffff;
+    --text: #20243a;
+    --muted: #6b7280;
+    --primary: #6558e8;
+    --border: #e2e5ef;
+    --correct: #168653;
+    --wrong: #d83d52;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background 0.2s, color 0.2s;
+}
+
+body.dark {
+    --bg: #111522;
+    --card: #1d2333;
+    --text: #f4f5ff;
+    --muted: #b1b8cb;
+    --primary: #9185ff;
+    --border: #363d50;
+    --correct: #56d99a;
+    --wrong: #ff8190;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 7%;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+}
+
+.navbar h2 {
+    margin: 0;
+    color: var(--primary);
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+}
+
+.theme-btn {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
+    background: var(--card);
+}
+
+.container {
+    width: min(680px, 92%);
+    margin: 55px auto;
+    flex: 1;
+}
+
+.card {
+    background: var(--card);
+    padding: 32px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(30, 40, 80, 0.07);
+}
+
+.hidden {
+    display: none;
+}
+
+.tag {
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+h1 {
+    font-size: clamp(26px, 5vw, 36px);
+    line-height: 1.2;
+}
+
+p {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.primary-btn {
+    width: 100%;
+    margin-top: 22px;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.primary-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.quiz-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.progress-track {
+    height: 8px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0 28px;
+}
+
+#progressBar {
+    width: 0;
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s;
+}
+
+#questionText {
+    line-height: 1.5;
+    margin-bottom: 22px;
+}
+
+.option-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 15px;
+    margin: 12px 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    color: var(--text);
+    transition: border 0.2s, background 0.2s;
+}
+
+.option-btn:not(:disabled):hover {
+    border-color: var(--primary);
+}
+
+.option-btn.correct {
+    border-color: var(--correct);
+    background: rgba(30, 160, 100, 0.12);
+}
+
+.option-btn.wrong {
+    border-color: var(--wrong);
+    background: rgba(220, 50, 75, 0.12);
+}
+
+#feedback {
+    font-weight: bold;
+}
+
+.review-item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.review-item h3 {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.review-item p {
+    margin: 5px 0;
+    overflow-wrap: anywhere;
+}
+
+footer {
+    text-align: center;
+    padding: 18px;
+    border-top: 1px solid var(--border);
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 15px 4%;
+    }
+
+    .navbar h2 {
+        font-size: 20px;
+    }
+
+    .theme-btn {
+        font-size: 12px;
+        padding: 9px;
+    }
+
+    .container {
+        margin: 25px auto;
+    }
+
+    .card {
+        padding: 22px 18px;
+        border-radius: 15px;
+    }
+
+    .quiz-top {
+        font-size: 12px;
+    }
+}
