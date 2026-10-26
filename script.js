@@ -210,15 +210,15 @@ function startQuiz() {
 function showQuestion() {
     selected = false;
 
-  const curentQuestion = currentQuestions[currentIndex];
+    const currentQuestion = currentQuestions[currentIndex];
 
     questionNumber.textContent =
-        `Question ${currentIndex + 1} of ${questions.length}`;
+        `Question ${currentIndex + 1} of ${currentQuestions.length}`;
 
     scoreText.textContent = `Score: ${score}`;
 
     progressBar.style.width =
-        `${((currentIndex + 1) / questions.length) * 100}%`;
+        `${((currentIndex + 1) / currentQuestions.length) * 100}%`;
 
     questionText.textContent = currentQuestion.question;
     optionsContainer.innerHTML = "";
@@ -239,7 +239,7 @@ function showQuestion() {
     });
 
     nextBtn.textContent =
-        currentIndex === questions.length - 1
+        currentIndex === currentQuestions.length - 1
             ? "See Results →"
             : "Next Question →";
 }
@@ -278,18 +278,16 @@ function checkAnswer(selectedIndex) {
     scoreText.textContent = `Score: ${score}`;
     nextBtn.disabled = false;
 }
-
 function nextQuestion() {
     if (!selected) return;
 
-    if (currentIndex < questions.length - 1) {
+    if (currentIndex < currentQuestions.length - 1) {
         currentIndex++;
         showQuestion();
     } else {
         showResults();
     }
 }
-
 function showResults() {
     quizScreen.classList.add("hidden");
     resultScreen.classList.remove("hidden");
